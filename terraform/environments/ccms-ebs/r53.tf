@@ -7,10 +7,16 @@ resource "aws_route53_record" "external" {
   type    = "A"
 
   alias {
-    name                   = aws_lb.ebsapps_lb.dns_name
-    zone_id                = aws_lb.ebsapps_lb.zone_id
+    name                   = "ebsnlbpublic-4150b42b36dd93b2.elb.eu-west-2.amazonaws.com"
+    zone_id                = "ZD4D7Y8KGAS4G"
     evaluate_target_health = true
   }
+
+  # alias {
+  #   name                   = aws_lb.ebsapps_lb.dns_name
+  #   zone_id                = aws_lb.ebsapps_lb.zone_id
+  #   evaluate_target_health = true
+  # }
 }
 
 resource "aws_route53_record" "ebslb_cname" {
