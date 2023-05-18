@@ -414,3 +414,35 @@ resource "aws_security_group_rule" "egress_traffic_webgatelb_cidr" {
   to_port           = each.value.to_port
   cidr_blocks       = [each.value.destination_cidr]
 }
+
+
+
+# Rule for Version 1 testers
+resource "aws_security_group" "ec2_sg_testers" {
+  name        = "ec2_sg_testers"
+  description = "SG traffic control for testers"
+  vpc_id      = data.aws_vpc.shared.id
+  tags = merge(local.tags,
+    { Name = lower(format("sg-%s-%s-testers", local.application_name, local.environment)) }
+  )
+}
+resource "aws_security_group_rule" "ingress_traffic_testers" {
+  for_each          = local.application_data.ec2_sg_base_ingress_rules
+  security_group_id = aws_security_group.ec2_sg_testers.id
+  type              = "ingress"
+  description       = format("Traffic for %s %d", each.value.protocol, each.value.from_port)
+  protocol          = each.value.protocol
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  cidr_blocks       = [local.application_data.tester_ips[tester_1].ip, local.application_data.tester_ips[tester_2].ip]
+}
+resource "aws_security_group_rule" "egress_traffic_testers_cidr" {
+  for_each          = local.application_data.ec2_sg_base_egress_rules
+  security_group_id = aws_security_group.ec2_sg_testers.id
+  type              = "egress"
+  description       = format("Outbound traffic for %s %d", each.value.protocol, each.value.from_port)
+  protocol          = each.value.protocol
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  cidr_blocks       = [each.value.destination_cidr]
+}

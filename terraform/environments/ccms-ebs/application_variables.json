@@ -514,5 +514,15 @@
       "protocol": "TCP",
       "destination_cidr": "0.0.0.0/0"
     }
+  },
+  "tester_ips": {
+    "tester_1":{
+      "name": "AurinelleTaboudi",
+      "ip": "2.124.117.99/32"
+    },
+    "tester_2":{
+      "name": "RichardHunter",
+      "ip": "86.148.198.53/32"
+    }
   }
 }
