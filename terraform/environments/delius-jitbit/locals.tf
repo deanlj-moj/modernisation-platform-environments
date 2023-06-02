@@ -27,4 +27,5 @@ locals {
   domain_record_prod = [for k, v in local.domain_types : v.record if k == "helpdesk.jitbit.dev.cr.probation.service.justice.gov.uk"]
   domain_type_prod   = [for k, v in local.domain_types : v.type if k == "helpdesk.jitbit.dev.cr.probation.service.justice.gov.uk"]
   on_prem_dgw_name   = "OnPremiseDataGateway-${local.application_name}-${local.environment}"
+  on_prem_auto_name  = "OnPremiseDataGateway-Automation-${local.application_name}-${local.environment}"
 }
