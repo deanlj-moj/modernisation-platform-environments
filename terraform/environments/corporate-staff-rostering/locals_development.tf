@@ -33,18 +33,18 @@ locals {
     }, 
 
     windows_autoscaling_group = {
-      dev-base-ol85 = {
+      dev-base-windows = {
         config = merge(module.baseline_presets.ec2_instance.config.default, {
           ami_name          = "ami-0a95a55db30f2dc58"
           availability_zone = null
-          ami_owner = "microsoft"
+          ami_owner = "Microsoft"
         })
 
       autoscaling_group = merge(module.baseline_presets.ec2_autoscaling_group.default, {
           desired_capacity = 1
         })
       tags = {
-          description = "For testing our base OL8.5 base image"
+          description = "For testing our base windows image"
           ami         = "ami-0a95a55db30f2dc58"
           os-type     = "Windows"
           component   = "test"
