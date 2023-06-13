@@ -32,23 +32,21 @@ locals {
       }
     }, 
 
-    windows_autoscaling_group = {
-      dev-base-windows = {
+   baseline_ec2_instances = {
+      my-test-ec2 = {
         config = merge(module.baseline_presets.ec2_instance.config.default, {
-          ami_name          = "ami-0a95a55db30f2dc58"
+          ami_name          = "ami-0bc237d1e18c6c53d"
           availability_zone = null
-          ami_owner = "Microsoft"
         })
-
-      autoscaling_group = merge(module.baseline_presets.ec2_autoscaling_group.default, {
-          desired_capacity = 1
+        instance = merge(module.baseline_presets.ec2_instance.instance.default, {
+          vpc_security_group_ids = ["data-db"]
         })
-      tags = {
-          description = "For testing our base windows image"
-          ami         = "ami-0a95a55db30f2dc58"
+        tags = {
+          description = "For testing our base windows"
+          ami         = "ami-0bc237d1e18c6c53d"
           os-type     = "Windows"
           component   = "test"
-          server-type = "ami-0a95a55db30f2dc58"
+          server-type = "ami-0bc237d1e18c6c53d"
         }
       }
     }
