@@ -32,24 +32,7 @@ locals {
       }
     }, 
 
-   baseline_ec2_instances = {
-      my-test-ec2 = {
-        config = merge(module.baseline_presets.ec2_instance.config.default, {
-          ami_name          = "ami-0bc237d1e18c6c53d"
-          availability_zone = null
-        })
-        instance = merge(module.baseline_presets.ec2_instance.instance.default, {
-          vpc_security_group_ids = ["data-db"]
-        })
-        tags = {
-          description = "For testing our base windows"
-          ami         = "ami-0bc237d1e18c6c53d"
-          os-type     = "Windows"
-          component   = "test"
-          server-type = "ami-0bc237d1e18c6c53d"
-        }
-      }
-    }
+
 
   }
 
