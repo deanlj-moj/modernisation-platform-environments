@@ -32,8 +32,24 @@ locals {
       }
     }, 
 
-
-
-  }
+    baseline_ec2_instances = {
+      my-test-ec2 = {
+        config = merge(module.baseline_presets.ec2_instance.config.default, {
+          ami_name          = "base_ol_8_5_*"
+        })
+        instance = merge(module.baseline_presets.ec2_instance.instance.default, {
+          vpc_security_group_ids = ["data-db"]
+        })
+        tags = {
+          description = "For testing our base OL8.5 base image"
+          ami         = "base_ol_8_5"
+          os-type     = "Linux"
+          component   = "test"
+          server-type = "base-ol-8-5"
+        }
+      }
+    }
+    
+    }
 
 }
