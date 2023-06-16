@@ -27,4 +27,24 @@ locals {
   domain_type_main   = [for k, v in local.domain_types : v.type if k == "modernisation-platform.service.justice.gov.uk"]
   domain_type_sub    = [for k, v in local.domain_types : v.type if k != "modernisation-platform.service.justice.gov.uk"]
 
+  ##
+  # New target IaC
+  ##
+  account_configs = {
+    development = local.development_config
+    test        = local.test_config
+    # preproduction = local.preproduction_config
+    # production    = local.production_config
+  }
+
+  account_config_baselines = {
+    development = local.development_config_baseline
+    test        = local.test_config_baseline
+    # preproduction = local.preproduction_config_baseline
+    # production    = local.production_config_baseline
+  }
+
+  account_config          = local.account_configs["test"]
+  account_config_baseline = local.account_config_baselines["test"]
+
 }
