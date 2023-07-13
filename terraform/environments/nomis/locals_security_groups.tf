@@ -209,7 +209,101 @@ locals {
         }
       }
     }
+    web_sg = {
+      description = "SG for web servers"
+      ingress = {
+        all-from-self = {
+          description = "Allow all ingress to self"
+          from_port = 0
+          to_port = 0 
+          protocol = -1
+          self = true
+        }
+        ssh = {
+          description = "Allow ssh ingress"
+          from_port   = "22"
+          to_port     = "22"
+          protocol    = "TCP"
+          cidr_blocks = local.security_group_cidrs.ssh
+          security_groups = [
+            "bastion-linux",
+          ]
+        }
+        http7770 = {
+          description = "Allow http7770 ingress"
+          from_port = "7770"
+          to_port = "7770"
+          protocol = "TCP"
+          security_groups = [
+            "private-jumpserver",
+            "private-lb",
+            "bastion-linux",
+          ]
+          cidr_blocks = local.security_group_cidrs.http7xxx
 
+        }
+         http7771 = {
+          description = "Allow http7771 ingress"
+          from_port = "7771"
+          to_port = "7771"
+          protocol = "TCP"
+          security_groups = [
+            "private-jumpserver",
+            "private-lb",
+            "bastion-linux",
+          ]
+          cidr_blocks = local.security_group_cidrs.http7xxx
+
+        }
+         http7780 = {
+          description = "Allow http7780 ingress"
+          from_port = "7780"
+          to_port = "7780"
+          protocol = "TCP"
+          security_groups = [
+            "private-jumpserver",
+            "private-lb",
+            "bastion-linux",
+          ]
+          cidr_blocks = local.security_group_cidrs.http7xxx
+
+        }
+         http7781 = {
+          description = "Allow http7781 ingress"
+          from_port = "7781"
+          to_port = "7781"
+          protocol = "TCP"
+          security_groups = [
+            "private-jumpserver",
+            "private-lb",
+            "bastion-linux",
+          ]
+          cidr_blocks = local.security_group_cidrs.http7xxx
+
+        }
+        https80 = {
+          description = "allow ingress from port 80"
+          from_port = "80"
+          to_port = "80"
+          protocol = "TCP"
+          security_groups = [
+            "private-jumpserver",
+            "bastion-linux",
+          ]
+          cidr_blocks = local.security_group_cidrs.https
+        }
+      }
+      egress = {
+        all = {
+          description     = "Allow all egress"
+          from_port       = 0
+          to_port         = 0
+          protocol        = "-1"
+          cidr_blocks     = ["0.0.0.0/0"]
+          security_groups = []
+        }
+      }
+    }
     data_db = {
       description = "Security group for databases"
       ingress = {
