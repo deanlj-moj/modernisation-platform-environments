@@ -79,9 +79,171 @@ locals {
       }
     }
 
+    baseline_lbs = {
+      # AWS doesn't let us call it internal
+      private = {
+        internal_lb              = true
+        enable_delete_protection = false
+        force_destroy_bucket     = true
+        idle_timeout             = 3600
+        public_subnets           = module.environment.subnets["private"].ids
+        security_groups          = ["private-lb"]
+
+        listeners = {
+          http = local.weblogic_lb_listeners.http
+
+          http7777 = merge(local.weblogic_lb_listeners.http7777, {
+            rules = {
+              # T1 users in Azure accessed server directly on http 7777
+              # so support this in Mod Platform as well to minimise
+              # disruption.  This isn't needed for other environments.
+              t1-nomis-web-a = {
+                priority = 300
+                actions = [{
+                  type              = "forward"
+                  target_group_name = "t1-nomis-web-a-http-7777"
+                }]
+                conditions = [{
+                  host_header = {
+                    values = [
+                      "t1-nomis-web-a.test.nomis.az.justice.gov.uk",
+                      "t1-nomis-web-a.test.nomis.service.justice.gov.uk",
+                      "c-t1.test.nomis.az.justice.gov.uk",
+                      "c-t1.test.nomis.service.justice.gov.uk",
+                      "t1-cn.hmpp-azdt.justice.gov.uk",
+                    ]
+                  }
+                }]
+              }
+              t1-nomis-web-b = {
+                priority = 400
+                actions = [{
+                  type              = "forward"
+                  target_group_name = "t1-nomis-web-b-http-7777"
+                }]
+                conditions = [{
+                  host_header = {
+                    values = [
+                      "t1-nomis-web-b.test.nomis.az.justice.gov.uk",
+                      "t1-nomis-web-b.test.nomis.service.justice.gov.uk",
+                    ]
+                  }
+                }]
+              }
+            }
+          })
+
+          https = merge(local.weblogic_lb_listeners.https, {
+            alarm_target_group_names = ["t1-nomis-web-a-http-7777"]
+            rules = {
+              t1-nomis-web-a-http-7777 = {
+                priority = 300
+                actions = [{
+                  type              = "forward"
+                  target_group_name = "t1-nomis-web-a-http-7777"
+                }]
+                conditions = [{
+                  host_header = {
+                    values = [
+                      "t1-nomis-web-a.test.nomis.az.justice.gov.uk",
+                      "t1-nomis-web-a.test.nomis.service.justice.gov.uk",
+                      "c-t1.test.nomis.az.justice.gov.uk",
+                      "c-t1.test.nomis.service.justice.gov.uk",
+                      "t1-cn.hmpp-azdt.justice.gov.uk",
+                    ]
+                  }
+                }]
+              }
+              t1-nomis-web-b-http-7777 = {
+                priority = 450
+                actions = [{
+                  type              = "forward"
+                  target_group_name = "t1-nomis-web-b-http-7777"
+                }]
+                conditions = [{
+                  host_header = {
+                    values = [
+                      "t1-nomis-web-b.test.nomis.az.justice.gov.uk",
+                      "t1-nomis-web-b.test.nomis.service.justice.gov.uk",
+                    ]
+                  }
+                }]
+              }
+              t2-nomis-web-a-http-7777 = {
+                priority = 550
+                actions = [{
+                  type              = "forward"
+                  target_group_name = "t2-nomis-web-a-http-7777"
+                }]
+                conditions = [{
+                  host_header = {
+                    values = [
+                      "t2-nomis-web-a.test.nomis.az.justice.gov.uk",
+                      "t2-nomis-web-a.test.nomis.service.justice.gov.uk",
+                      "c-t2.test.nomis.az.justice.gov.uk",
+                      "c-t2.test.nomis.service.justice.gov.uk",
+                      "t2-cn.hmpp-azdt.justice.gov.uk",
+                    ]
+                  }
+                }]
+              }
+              t2-nomis-web-b-http-7777 = {
+                priority = 600
+                actions = [{
+                  type              = "forward"
+                  target_group_name = "t2-nomis-web-b-http-7777"
+                }]
+                conditions = [{
+                  host_header = {
+                    values = [
+                      "t2-nomis-web-b.test.nomis.az.justice.gov.uk",
+                      "t2-nomis-web-b.test.nomis.service.justice.gov.uk",
+                    ]
+                  }
+                }]
+              }
+              t3-nomis-web-a-http-7777 = {
+                priority = 700
+                actions = [{
+                  type              = "forward"
+                  target_group_name = "t3-nomis-web-a-http-7777"
+                }]
+                conditions = [{
+                  host_header = {
+                    values = [
+                      "t3-nomis-web-a.test.nomis.az.justice.gov.uk",
+                      "t3-nomis-web-a.test.nomis.service.justice.gov.uk",
+                      "c-t3.test.nomis.az.justice.gov.uk",
+                      "c-t3.test.nomis.service.justice.gov.uk",
+                      "t3-cn.hmpp-azdt.justice.gov.uk",
+                    ]
+                  }
+                }]
+              }
+              t3-nomis-web-b-http-7777 = {
+                priority = 800
+                actions = [{
+                  type              = "forward"
+                  target_group_name = "t3-nomis-web-b-http-7777"
+                }]
+                conditions = [{
+                  host_header = {
+                    values = [
+                      "t3-nomis-web-b.test.nomis.az.justice.gov.uk",
+                      "t3-nomis-web-b.test.nomis.service.justice.gov.uk",
+                    ]
+                  }
+                }]
+              }
+            }
+          })
+        }
+      }
+    }
+
     tags = {
       description = "Test CSR DB server"
-      ami         = "base_ol_8_5"
+      ami         = "hmpps_ol_8_5_oracledb_19c_release_2023-07-14T15-36-30.795Z"
       os-type     = "Linux"
       component   = "test"
       server-type = "csr-db"
