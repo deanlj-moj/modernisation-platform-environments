@@ -6,7 +6,7 @@
       "region": "eu-west-2",
       "allocated_storage": 300,
       "engine": "oracle-se2",
-      "engine_version": "19.0.0.0.ru-2021-10.rur-2021-10.r1",
+      "engine_version": "19.0.0.0.ru-2023-04.rur-2023-04.r1",
       "instance_class": "db.t3.small",
       "allow_major_version_upgrade": true,
       "auto_minor_version_upgrade": true,
