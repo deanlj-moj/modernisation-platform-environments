@@ -27,6 +27,7 @@ module "data_product_docs_lambda" {
 
 }
 
+// EXTRACT
 module "data_product_authorizer_lambda" {
   source                         = "github.com/ministryofjustice/modernisation-platform-terraform-lambda-function?ref=v2.0.1"
   application_name               = "data_product_authorizer"

@@ -99,6 +99,7 @@ data "aws_iam_policy_document" "athena_load_lambda_function_policy" {
   }
 }
 
+// EXTRACT
 data "aws_iam_policy_document" "iam_policy_document_for_authorizer_lambda" {
   statement {
     sid       = "LambdaLogGroup"
