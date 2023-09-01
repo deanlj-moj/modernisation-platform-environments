@@ -99,16 +99,6 @@ data "aws_iam_policy_document" "athena_load_lambda_function_policy" {
   }
 }
 
-// EXTRACT
-data "aws_iam_policy_document" "iam_policy_document_for_authorizer_lambda" {
-  statement {
-    sid       = "LambdaLogGroup"
-    effect    = "Allow"
-    actions   = ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
-    resources = ["arn:aws:logs:${local.region}:${local.account_id}:log-group:/aws/lambda/*"]
-  }
-}
-
 data "aws_iam_policy_document" "iam_policy_document_for_get_glue_metadata_lambda" {
   statement {
     sid     = "GlueReadOnly"
@@ -173,7 +163,7 @@ data "aws_iam_policy_document" "allow_invoke_authoriser_lambda_doc" {
   statement {
     effect    = "Allow"
     actions   = ["lambda:InvokeFunction"]
-    resources = [module.data_product_authorizer_lambda.lambda_function_arn]
+    resources = [module.authorizor_lambda.arn]
   }
 }
 

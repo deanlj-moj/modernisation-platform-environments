@@ -21,6 +21,18 @@ variable "api_source_arn" {
   type        = string
 }
 
+variable "authorizer_version" {
+  type = string
+}
+
+variable "region" {
+  type = string
+}
+
+variable "account_id" {
+  type = string
+}
+
 variable "tags" {
   type        = map(string)
   description = "Common tags to be used by all resources"
