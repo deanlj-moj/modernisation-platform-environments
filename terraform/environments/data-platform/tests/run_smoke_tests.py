@@ -1,8 +1,10 @@
 import base64
 import hashlib
+import json
 import sys
 import time
 
+from pprint import pprint
 import boto3
 import requests
 
@@ -50,7 +52,12 @@ if response.status_code != 200:
     sys.exit(1)
 
 response_json = response.json()
+# pprint(response_json)
 post_policy_form_data = response_json["URL"]["fields"]
+field_date = post_policy_form_data["x-amz-date"]
+print(f"Field date: {field_date}")
+policy = json.loads(base64.b64decode(post_policy_form_data["policy"]).decode("utf8"))
+pprint(policy)
 multipart_form_data = {
     **post_policy_form_data,
     "file": (post_policy_form_data["key"], open(filename, "r")),
