@@ -4,8 +4,8 @@ locals {
   # baseline config
   preproduction_config = {
     baseline_ec2_instances = {
-        pp-cafm-w-5-a = {
-          config = merge(module.baseline_presets.ec2_instance.config.default, {
+      pp-cafm-w-5-a = {
+        config = merge(module.baseline_presets.ec2_instance.config.default, {
           ami_name                      = "pp-cafm-w-5-a"
           ami_owner                     = "self"
           availability_zone             = "${local.region}a"
@@ -30,8 +30,8 @@ locals {
           ami         = "pp-cafm-w-5-a"
           component   = "web"
         }
-        }
+      }
     }
- 
+
   }
 }
