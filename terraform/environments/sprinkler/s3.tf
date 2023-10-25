@@ -10,7 +10,7 @@ resource "aws_s3_object" "tag-secured-object" {
   source = "./application_variables.json"
   tags   = merge(
     local.tags,
-    { "PermittedAccount" = local.environment_management.account_ids["sprinkler-development"] }
+    { "PermittedAccount" = local.environment_management.account_ids["cooker-development"] }
   )
 }
 
@@ -50,9 +50,9 @@ data "aws_iam_policy_document" "tag-secured-bucket" {
       values   = ["${data.aws_organizations_organization.root_account.id}/*/${local.environment_management.modernisation_platform_organisation_unit_id}/*"]
     }
     condition {
-      test     = "ForAnyValue:StringLike"
-      variable = "aws:SourceAccount"
-      values   = ["s3:ExistingObjectTag/PermittedAccount"]
+      test     = "StringEquals"
+      variable = "s3:ExistingObjectTag/PermittedAccount"
+      values   = ["&{aws:PrincipalAccount}"]
     }
   }
 }
