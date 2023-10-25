@@ -1,10 +1,7 @@
 resource "aws_s3_bucket" "tag-secured-bucket"{
   bucket_prefix = local.application_name
   force_destroy = true
-  tags = merge(
-    local.tags,
-    { "PermittedAccounts" = format("%s, %s", local.environment_management.account_ids["sprinkler-development"], local.environment_management.account_ids["cooker-development"]) }
-  )
+  tags = local.tags
 }
 
 resource "aws_s3_object" "tag-secured-object" {
@@ -13,7 +10,7 @@ resource "aws_s3_object" "tag-secured-object" {
   source = "./application_variables.json"
   tags   = merge(
     local.tags,
-    { "PermittedAccounts" = format("%s, %s", local.environment_management.account_ids["sprinkler-development"], local.environment_management.account_ids["cooker-development"]) }
+    { "PermittedAccount" = local.environment_management.account_ids["sprinkler-development"] }
   )
 }
 
@@ -55,7 +52,7 @@ data "aws_iam_policy_document" "tag-secured-bucket" {
     condition {
       test     = "ForAnyValue:StringLike"
       variable = "aws:SourceAccount"
-      values   = ["s3:ExistingObjectTag/PermittedAccounts"]
+      values   = ["s3:ExistingObjectTag/PermittedAccount"]
     }
   }
 }
