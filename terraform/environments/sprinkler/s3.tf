@@ -1,16 +1,17 @@
-resource "aws_s3_bucket" "tag-secured-bucket"{
+resource "aws_s3_bucket" "tag-secured-bucket" {
   bucket_prefix = local.application_name
   force_destroy = true
-  tags = local.tags
+  tags          = local.tags
 }
 
 resource "aws_s3_object" "tag-secured-object" {
-  bucket = aws_s3_bucket.tag-secured-bucket.id
-  key    = "testobject"
-  source = "./application_variables.json"
-  tags   = merge(
+  for_each = nonsensitive(local.environment_management.account_ids)
+  bucket   = aws_s3_bucket.tag-secured-bucket.id
+  key      = each.key
+  source   = "./application_variables.json"
+  tags = merge(
     local.tags,
-    { "PermittedAccount" = local.environment_management.account_ids["cooker-development"] }
+    { "PermittedAccount" = each.value }
   )
 }
 
@@ -39,7 +40,7 @@ data "aws_iam_policy_document" "tag-secured-bucket" {
   statement {
     sid       = "SecureObjectWithTag"
     actions   = ["s3:Get*", "s3:Put*"]
-    resources = [format("%s/%s", aws_s3_bucket.tag-secured-bucket.arn, aws_s3_object.tag-secured-object.key)]
+    resources = [format("%s/*", aws_s3_bucket.tag-secured-bucket.arn)]
     principals {
       identifiers = ["*"]
       type        = "AWS"
