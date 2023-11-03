@@ -55,8 +55,8 @@ resource "aws_db_instance" "iaps_snapshot_test" {
   engine_version = local.application_data.accounts[local.environment].db_engine_version
   license_model  = "bring-your-own-license"
   instance_class = local.application_data.accounts[local.environment].db_instance_class # maybe change this
-  db_name        = "IAPS_snapshot_test"
-  identifier     = "iaps_snapshot_test"
+  db_name        = "IAPS-snapshot-test"
+  identifier     = "iaps-snapshot-test"
 
   username                      = local.application_data.accounts[local.environment].db_user
   manage_master_user_password   = true
@@ -94,7 +94,7 @@ resource "aws_db_instance" "iaps_snapshot_test" {
   delete_automated_backups = false
 
   tags = merge(local.tags,
-    { Name = lower(format("%s-%s-database", local.application_name, local.environment, "snapshot_test")) }
+    { Name = lower(format("%s-%s-database", local.application_name, local.environment, "snapshot-test")) }
   )
 
   # lifecycle {
