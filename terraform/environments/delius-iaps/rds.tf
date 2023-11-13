@@ -94,7 +94,7 @@ resource "aws_db_instance" "iaps_snapshot_test" {
   delete_automated_backups = false
 
   tags = merge(local.tags,
-    { Name = lower(format("%s-%s-database", local.application_name, local.environment, "snapshot-test")) }
+    { Name = lower(format("%s-%s-%s-database", local.application_name, local.environment, "snapshot-test")) }
   )
 
   # lifecycle {
