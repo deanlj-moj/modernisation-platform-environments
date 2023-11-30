@@ -9,7 +9,7 @@ mainSteps:
   - name: InstallPortQry
     action: aws:runPowerShellScript
     inputs:
-      runCommand:
+      runCommand: 
         - |
           $source = "https://download.microsoft.com/download/0/d/9/0d9d81cf-4ef2-4aa5-8cea-95a935ee09c9/PortQryV2.exe"
           $filePath = "C:\PortQryV2.exe"
