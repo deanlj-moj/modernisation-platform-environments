@@ -75,7 +75,7 @@ resource "aws_instance" "cymulate-test" {
   associate_public_ip_address = true
   availability_zone           = "eu-west-2a"
   ebs_optimized               = true
-  security_groups             = "${aws_security_group.cymulate-sg.id}"
+  security_groups             = [aws_security_group.cymulate-sg.id]
   subnet_id                   = data.aws_subnet.private_subnets_a.id
 
 tags = merge(
