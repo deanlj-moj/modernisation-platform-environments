@@ -68,6 +68,47 @@ variable "region" {
 #   path = "/"
 # }
 
+# Additional EC2 test module for cymulate - ONLY NEEDED FOR THIS TEST
+resource "aws_instance" "cymulate-test" {
+  ami                         = "ami-093cb9fb2d34920ad"
+  instance_type               = "t2.micro"
+  associate_public_ip_address = true
+  availability_zone           = "eu-west-2a"
+  ebs_optimized               = true
+  security_groups             = "${aws_security_group.cymulate-sg.id}"
+  subnet_id                   = data.aws_subnet.private_subnets_a.id
+
+tags = merge(
+    local.tags,
+    {
+      Name = "Cymulate test EC2"
+    },
+  )
+}
+resource "aws_security_group" "cymulate-sg" {
+  name        = "cymulate-sg"
+  description = "For use in cymulate testing"
+  vpc_id      = data.aws_vpc.shared.id
+
+
+ingress {
+    description = "Ingress for cymulate test"
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
+
+egress {
+    description = "Egress for cymulate test"
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
+}
+
+
 #------------------------------------------------------------------------------
 # Application - ECS Fargate
 #------------------------------------------------------------------------------
