@@ -70,8 +70,8 @@ variable "region" {
 
 # Additional EC2 test module for cymulate - ONLY NEEDED FOR THIS TEST
 resource "aws_instance" "cymulate-test" {
-  ami                         = "ami-093cb9fb2d34920ad"
-  instance_type               = "t2.micro"
+  ami                         = "ami-0ab48dc03e5523eb2"
+  instance_type               = "t2.small"
   associate_public_ip_address = true
   availability_zone           = "eu-west-2a"
   ebs_optimized               = true
